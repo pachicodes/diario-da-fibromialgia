@@ -54,9 +54,13 @@ O acompanhamento diário dos sintomas é fundamental para o gerenciamento eficaz
 
 ## Uso
 
-1. Abra o arquivo `index.html` em um navegador.
-2. Utilize a página do painel para registrar seus níveis de dor e fadiga.
-3. Acesse a página de histórico para visualizar registros anteriores.
+1. Inicie o servidor local:
+   ```
+   npm start
+   ```
+2. O navegador abrirá automaticamente com a aplicação no endereço http://localhost:3000
+3. Utilize a página do painel para registrar seus níveis de dor e fadiga.
+4. Acesse a página de histórico para visualizar registros anteriores.
 
 ## Contribuição
 
