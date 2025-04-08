@@ -1,0 +1,23 @@
+{
+  "name": "gerenciando-fibromialgia",
+  "version": "1.0.0",
+  "description": "Um diário para registrar níveis de dor e fadiga relacionados à fibromialgia.",
+  "main": "src/assets/js/app.js",
+  "scripts": {
+    "start": "live-server src",
+    "build": "echo 'Build step not defined'",
+    "test": "echo 'Test step not defined'"
+  },
+  "keywords": [
+    "fibromialgia",
+    "diário",
+    "saúde",
+    "bem-estar"
+  ],
+  "author": "Seu Nome",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "live-server": "^1.2.1"
+  }
+}

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <title>Configurações - Gerenciando Fibromialgia</title>
+</head>
+<body>
+    <header>
+        <h1>Configurações</h1>
+    </header>
+    <main>
+        <section>
+            <h2>Ajustes da Aplicação</h2>
+            <form id="settingsForm">
+                <label for="painLevel">Nível de Dor (1 a 10):</label>
+                <input type="number" id="painLevel" name="painLevel" min="1" max="10" required>
+                
+                <label for="fatigueLevel">Nível de Fadiga (1 a 10):</label>
+                <input type="number" id="fatigueLevel" name="fatigueLevel" min="1" max="10" required>
+                
+                <button type="submit">Salvar Configurações</button>
+            </form>
+        </section>
+    </main>
+    <script src="../assets/js/app.js"></script>
+</body>
+</html>

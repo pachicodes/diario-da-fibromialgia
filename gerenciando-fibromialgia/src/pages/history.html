@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <title>Histórico de Fibromialgia</title>
+</head>
+<body>
+    <header>
+        <h1>Histórico de Registros</h1>
+    </header>
+    <main>
+        <section id="history">
+            <h2>Registros Anteriores</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Nível de Dor</th>
+                        <th>Nível de Fadiga</th>
+                    </tr>
+                </thead>
+                <tbody id="historyTableBody">
+                    <!-- Os registros serão inseridos aqui dinamicamente -->
+                </tbody>
+            </table>
+        </section>
+    </main>
+    <script src="../assets/js/app.js"></script>
+    <script src="../assets/js/services/dataService.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const historyTableBody = document.getElementById('historyTableBody');
+            const records = getRecords(); // Função que recupera os registros do localStorage
+
+            records.forEach(record => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${record.date}</td>
+                    <td>${record.painLevel}</td>
+                    <td>${record.fatigueLevel}</td>
+                `;
+                historyTableBody.appendChild(row);
+            });
+        });
+    </script>
+</body>
+</html>
