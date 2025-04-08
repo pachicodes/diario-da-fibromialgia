@@ -4,9 +4,7 @@
   "description": "Aplicação web para pessoas com fibromialgia registrarem e acompanharem níveis de dor e fadiga diariamente",
   "main": "src/assets/js/app.js",
   "scripts": {
-    "start": "http-server ./src -p 3000 -o",
-    "build": "echo 'Build step not defined'",
-    "test": "echo 'Test step not defined'"
+    "start": "http-server ./src -p 3000 -o"
   },
   "keywords": [
     "fibromialgia",
@@ -16,8 +14,16 @@
   ],
   "author": "Seu Nome",
   "license": "MIT",
-  "dependencies": {},
   "devDependencies": {
     "http-server": "^14.1.1"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pachicodes/gerenciando-fibromialgia.git"
+  },
+  "bugs": {
+    "url": "https://github.com/pachicodes/gerenciando-fibromialgia/issues"
+  },
+  "homepage": "https://github.com/pachicodes/gerenciando-fibromialgia#readme",
+  "dependencies": {}
 }
