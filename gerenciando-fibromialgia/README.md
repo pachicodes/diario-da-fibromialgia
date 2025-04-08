@@ -1,6 +1,19 @@
-# gerenciando-fibromialgia
+# Gerenciando sua fibromialgia
 
-Este projeto é um diário de fibromialgia que permite as usuárias registrar e acompanhar seus níveis de dor e fadiga. A aplicação é construída em JavaScript e utiliza HTML e CSS para a interface da usuária.
+Este projeto é um diário de fibromialgia que permite as usuárias registrar e acompanhar seus níveis de dor e fadiga, principais sintomas da doença.
+A aplicação é construída em JavaScript e utiliza HTML e CSS para a interface da usuária.
+
+## Sobre a Fibromialgia
+
+A fibromialgia é uma condição crônica caracterizada por dor musculoesquelética generalizada, acompanhada por fadiga, distúrbios do sono, problemas de memória e alterações de humor. Afeta predominantemente mulheres (cerca de 80-90% dos casos diagnosticados), com maior incidência entre 30 e 50 anos de idade.
+
+### Principais características:
+- **Dor generalizada**: Dor persistente que afeta ambos os lados do corpo, acima e abaixo da cintura
+- **Fadiga crônica**: Cansaço extremo mesmo após períodos adequados de sono
+- **Distúrbios cognitivos**: Dificuldade de concentração e memória (também chamado de "fibro fog")
+- **Sensibilidade aumentada**: Hipersensibilidade a estímulos como toque, luz, som e mudanças de temperatura
+
+O acompanhamento diário dos sintomas é fundamental para o gerenciamento eficaz da condição, auxiliando no reconhecimento de padrões, identificação de gatilhos e na comunicação mais precisa com profissionais de saúde.
 
 ## Estrutura do Projeto
 
