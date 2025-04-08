@@ -1,10 +1,10 @@
 {
   "name": "gerenciando-fibromialgia",
   "version": "1.0.0",
-  "description": "Um diário para registrar níveis de dor e fadiga relacionados à fibromialgia.",
+  "description": "Aplicação web para pessoas com fibromialgia registrarem e acompanharem níveis de dor e fadiga diariamente",
   "main": "src/assets/js/app.js",
   "scripts": {
-    "start": "live-server src",
+    "start": "http-server ./src -p 3000 -o",
     "build": "echo 'Build step not defined'",
     "test": "echo 'Test step not defined'"
   },
@@ -16,7 +16,8 @@
   ],
   "author": "Seu Nome",
   "license": "MIT",
+  "dependencies": {},
   "devDependencies": {
-    "live-server": "^1.2.0"
+    "http-server": "^14.1.1"
   }
 }
