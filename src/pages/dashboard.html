@@ -1,32 +1,114 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Sintomas | Gerenciando Fibromialgia</title>
     <link rel="stylesheet" href="../assets/css/styles.css">
-    <title>Painel de Fibromialgia</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <header>
-        <h1>Diário de Fibromialgia</h1>
+    <header class="header">
+        <div class="container">
+            <h1>Gerenciando Fibromialgia</h1>
+            <p class="tagline">Seu diário para acompanhamento de sintomas e bem-estar</p>
+        </div>
     </header>
-    <main>
-        <section id="pain-tracker">
-            <h2>Registro de Dor</h2>
-            <label for="pain-level">Nível de Dor (1 a 10):</label>
-            <input type="number" id="pain-level" min="1" max="10">
-            <button id="submit-pain">Registrar Dor</button>
-        </section>
-        <section id="fatigue-tracker">
-            <h2>Registro de Fadiga</h2>
-            <label for="fatigue-level">Nível de Fadiga (1 a 10):</label>
-            <input type="number" id="fatigue-level" min="1" max="10">
-            <button id="submit-fatigue">Registrar Fadiga</button>
-        </section>
-        <section id="feedback">
-            <p id="message"></p>
-        </section>
+
+    <nav class="main-nav">
+        <div class="container nav-container">
+            <ul>
+                <li><a href="../index.html">Início</a></li>
+                <li class="active"><a href="dashboard.html">Registrar</a></li>
+                <li><a href="history.html">Histórico</a></li>
+                <li><a href="settings.html">Configurações</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="container">
+            <section class="form-section">
+                <h2>Registro Diário</h2>
+                <p class="form-subtitle">Registre como você está se sentindo hoje</p>
+                
+                <form id="symptomForm" class="symptom-form">
+                    <div class="form-date">
+                        <label for="entryDate">Data:</label>
+                        <input type="date" id="entryDate" name="entryDate" required>
+                    </div>
+                    
+                    <div class="slider-container">
+                        <label for="painLevel">Nível de dor (1-10):</label>
+                        <div class="slider-with-value">
+                            <input type="range" id="painLevel" name="painLevel" min="1" max="10" value="5" class="slider">
+                            <span class="slider-value" id="painValue">5</span>
+                        </div>
+                        <div class="slider-labels">
+                            <span>Leve</span>
+                            <span>Moderada</span>
+                            <span>Severa</span>
+                        </div>
+                    </div>
+                    
+                    <div class="slider-container">
+                        <label for="fatigueLevel">Nível de fadiga (1-10):</label>
+                        <div class="slider-with-value">
+                            <input type="range" id="fatigueLevel" name="fatigueLevel" min="1" max="10" value="5" class="slider">
+                            <span class="slider-value" id="fatigueValue">5</span>
+                        </div>
+                        <div class="slider-labels">
+                            <span>Leve</span>
+                            <span>Moderada</span>
+                            <span>Severa</span>
+                        </div>
+                    </div>
+                    
+                    <div class="notes-container">
+                        <label for="notes">Anotações:</label>
+                        <textarea id="notes" name="notes" rows="5" placeholder="Anote outros sintomas, gatilhos, medicamentos tomados, atividades do dia, alimentação, sono, etc..."></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Salvar registro</button>
+                </form>
+                
+                <div class="info-panel">
+                    <h3>Dicas para um registro eficaz</h3>
+                    <ul>
+                        <li>Seja consistente - faça registros diários para melhor acompanhamento</li>
+                        <li>Anote mudanças na rotina, alimentação ou medicamentos</li>
+                        <li>Registre fatores climáticos que podem influenciar os sintomas</li>
+                        <li>Documente técnicas de manejo da dor e seus resultados</li>
+                    </ul>
+                </div>
+            </section>
+        </div>
     </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Gerenciando Fibromialgia | Apoiando pessoas com fibromialgia</p>
+        </div>
+    </footer>
+
     <script src="../assets/js/app.js"></script>
+    <script>
+        // Script para atualizar o valor exibido dos sliders
+        const painSlider = document.getElementById('painLevel');
+        const painValue = document.getElementById('painValue');
+        
+        painSlider.oninput = function() {
+            painValue.textContent = this.value;
+        }
+        
+        const fatigueSlider = document.getElementById('fatigueLevel');
+        const fatigueValue = document.getElementById('fatigueValue');
+        
+        fatigueSlider.oninput = function() {
+            fatigueValue.textContent = this.value;
+        }
+    </script>
 </body>
 </html>

@@ -7,8 +7,8 @@
     --primary-dark: #5D3FD3;
     --primary-light: #EDE4FF;
     --accent-color: #FF7B9C;
-    --text-color: #333333;
-    --text-light: #666666;
+    --text-color: #000000;
+    --text-light: #4d4c4c;
     --background-color: #FFFFFF;
     --background-alt: #F8F9FA;
     --border-color: #E0E0E0;
@@ -41,7 +41,7 @@ body {
 /* Tipografia moderna */
 h1, h2, h3, h4, h5, h6 {
     font-weight: 600;
-    line-height: 1.3;
+    line-height: 1.5;
     color: var(--text-color);
 }
 
@@ -102,6 +102,7 @@ p {
     font-size: 1.1rem;
     max-width: 600px;
     margin: 0 auto;
+    color:#333333
 }
 
 /* Navegação moderna */
@@ -399,4 +400,162 @@ button:hover {
     h1 { font-size: 2rem; }
     h2 { font-size: 1.6rem; }
     h3 { font-size: 1.2rem; }
+}
+
+/* Estilos para o formulário de registro */
+.form-section {
+    background-color: var(--background-color);
+    border-radius: var(--border-radius);
+    padding: 40px;
+    box-shadow: var(--shadow-md);
+    margin-bottom: 40px;
+}
+
+.form-subtitle {
+    color: var(--text-light);
+    margin-bottom: 30px;
+}
+
+.symptom-form {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    background: none;
+    padding: 0;
+    box-shadow: none;
+    border: none;
+}
+
+.form-date {
+    margin-bottom: 10px;
+}
+
+.form-date input {
+    padding: 12px 16px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+}
+
+/* Estilo para sliders */
+.slider-container {
+    margin-bottom: 24px;
+}
+
+.slider-with-value {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 8px;
+    border-radius: 5px;
+    background: linear-gradient(to right, var(--primary-light), var(--primary-color));
+    outline: none;
+    transition: opacity 0.2s;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    cursor: pointer;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.slider::-webkit-slider-thumb:hover {
+    transform: scale(1.1);
+}
+
+.slider::-moz-range-thumb {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    cursor: pointer;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.slider::-moz-range-thumb:hover {
+    transform: scale(1.1);
+}
+
+.slider-value {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: 600;
+    border-radius: 50%;
+}
+
+.slider-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+    color: var(--text-light);
+    font-size: 0.85rem;
+}
+
+/* Estilos para campo de anotações */
+.notes-container {
+    margin-bottom: 24px;
+}
+
+.notes-container textarea {
+    width: 100%;
+    padding: 16px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    resize: vertical;
+    min-height: 120px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    transition: all 0.3s ease;
+}
+
+.notes-container textarea::placeholder {
+    color: #AAA;
+}
+
+.notes-container textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(138, 79, 255, 0.1);
+}
+
+/* Painel informativo */
+.info-panel {
+    background-color: var(--primary-light);
+    padding: 24px;
+    border-radius: var(--border-radius);
+    margin-top: 32px;
+}
+
+.info-panel h3 {
+    color: var(--primary-dark);
+    margin-bottom: 16px;
+}
+
+.info-panel ul {
+    margin-left: 20px;
+    color: var(--text-color);
+}
+
+.info-panel li {
+    margin-bottom: 8px;
 }
