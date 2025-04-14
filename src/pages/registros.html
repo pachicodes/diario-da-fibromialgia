@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registros | Gerenciando Fibromialgia</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <h1>Gerenciando Fibromialgia</h1>
+            <p class="tagline">Seu diário para acompanhamento de sintomas e bem-estar</p>
+        </div>
+    </header>
+
+    <nav class="main-nav">
+        <div class="container nav-container">
+            <ul>
+                <li><a href="../index.html">Início</a></li>
+                <li><a href="registrar.html">Registrar</a></li>
+                <li class="active"><a href="registros.html">Registros</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="container">
+            <section class="records-section">
+                <h2>Meus Registros</h2>
+                <p class="form-subtitle">Veja o histórico dos seus registros diários</p>
+                <div id="recordsList" class="records-list">
+                    <!-- Os registros serão exibidos aqui via JavaScript -->
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Gerenciando Fibromialgia | Apoiando pessoas com fibromialgia</p>
+        </div>
+    </footer>
+
+    <script src="../assets/js/app.js"></script>
+    <script>
+        // Exemplo de carregamento de registros (substitua pelo seu método real)
+        document.addEventListener('DOMContentLoaded', function() {
+            const recordsList = document.getElementById('recordsList');
+            // Aqui você pode buscar os registros do localStorage ou de uma API
+            // Exemplo estático:
+            const registros = [
+                { data: '2025-04-13', dor: 6, fadiga: 7, notas: 'Dia cansativo, dor moderada.' },
+                { data: '2025-04-12', dor: 4, fadiga: 5, notas: 'Melhora após descanso.' }
+            ];
+            if (registros.length === 0) {
+                recordsList.innerHTML = '<p>Nenhum registro encontrado.</p>';
+            } else {
+                recordsList.innerHTML = registros.map((r, idx) => `
+                    <div class="record-item">
+                        <strong>Data:</strong> ${r.data}<br>
+                        <strong>Dor:</strong> ${r.dor} / 10<br>
+                        <strong>Fadiga:</strong> ${r.fadiga} / 10<br>
+                        <strong>Anotações:</strong> ${r.notas}<br>
+                        <button class="edit-btn" data-idx="${idx}">Editar</button>
+                        <button class="delete-btn" data-idx="${idx}">Excluir</button>
+                    </div>
+                `).join('');
+            }
+
+            // Eventos para editar e excluir
+            recordsList.querySelectorAll('.edit-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const idx = this.getAttribute('data-idx');
+                    alert('Função de edição para o registro #' + idx + ' ainda não implementada.');
+                    // Aqui você pode abrir um modal ou formulário para edição
+                });
+            });
+            recordsList.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const idx = this.getAttribute('data-idx');
+                    alert('Função de exclusão para o registro #' + idx + ' ainda não implementada.');
+                    // Aqui você pode remover o registro do array/localStorage e atualizar a lista
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -7,7 +7,8 @@ A aplicação é construída em JavaScript e utiliza HTML e CSS para a interface
 
 A fibromialgia é uma condição crônica caracterizada por dor musculoesquelética generalizada, acompanhada por fadiga, distúrbios do sono, problemas de memória e alterações de humor. Afeta predominantemente mulheres (cerca de 80-90% dos casos diagnosticados), com maior incidência entre 30 e 50 anos de idade.
 
-### Principais características:
+### Principais características
+
 - **Dor generalizada**: Dor persistente que afeta ambos os lados do corpo, acima e abaixo da cintura
 - **Fadiga crônica**: Cansaço extremo mesmo após períodos adequados de sono
 - **Distúrbios cognitivos**: Dificuldade de concentração e memória (também chamado de "fibro fog")
@@ -40,26 +41,35 @@ O acompanhamento diário dos sintomas é fundamental para o gerenciamento eficaz
 ## Instalação
 
 1. Clone o repositório:
-   ```
+
+   ```bash
    git clone <URL_DO_REPOSITORIO>
    ```
+
 2. Navegue até o diretório do projeto:
-   ```
+
+   ```bash
    cd gerenciando-fibromialgia
    ```
+
 3. Instale as dependências:
-   ```
+
+   ```bash
    npm install
    ```
 
 ## Uso
 
 1. Inicie o servidor local:
-   ```
+
+   ```bash
    npm start
    ```
-2. O navegador abrirá automaticamente com a aplicação no endereço http://localhost:3000
+
+2. O navegador abrirá automaticamente com a aplicação no endereço [http://localhost:3000](http://localhost:3000)
+
 3. Utilize a página do painel para registrar seus níveis de dor e fadiga.
+
 4. Acesse a página de histórico para visualizar registros anteriores.
 
 ## Contribuição

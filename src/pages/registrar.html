@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diário de Fibromialgia</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <h1>Diário de Fibromialgia</h1>
+            <p class="tagline">Registre seus níveis de dor e fadiga de forma simples</p>
+        </div>
+    </header>
+    <nav class="main-nav">
+        <div class="container nav-container">
+            <ul>
+                <li><a href="../index.html">Início</a></li>
+                <li class="active"><a href="registrar.html">Registrar</a></li>
+                <li><a href="registros.html">Registros</a></li>
+            </ul>
+        </div>
+    </nav>
+    <main class="main-content">
+        <div class="container">
+            <form id="registroForm" class="symptom-form">
+                <label for="data">Data:</label>
+                <input type="date" id="data" name="data" required>
+
+                <label for="hora">Hora (opcional):</label>
+                <input type="time" id="hora" name="hora">
+
+                <label for="dor">Nível de dor (1-10):</label>
+                <input type="number" id="dor" name="dor" min="1" max="10" value="1" required>
+
+                <label for="fadiga">Nível de fadiga (1-10):</label>
+                <input type="number" id="fadiga" name="fadiga" min="1" max="10" value="1" required>
+
+                <label for="anotacoes">Anotações:</label>
+                <textarea id="anotacoes" name="anotacoes" rows="3" placeholder="Outros sintomas, gatilhos, medicamentos, etc..."></textarea>
+
+                <button type="submit" class="btn btn-primary">Salvar registro</button>
+            </form>
+
+            <section class="history" id="registrosSection">
+                <h2>Registros</h2>
+                <ul id="registrosLista"></ul>
+            </section>
+        </div>
+    </main>
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Diário de Fibromialgia</p>
+        </div>
+    </footer>
+    <script type="module" src="assets/js/app.js"></script>
+</body>
+</html>
