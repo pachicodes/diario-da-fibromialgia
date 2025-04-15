@@ -8,6 +8,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Biblioteca do Google Sign-In -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
     <header class="header">
@@ -24,6 +26,17 @@
                 <li><a href="registrar.html">Registrar</a></li>
                 <li class="active"><a href="registros.html">Registros</a></li>
             </ul>
+            <!-- Área de login -->
+            <div class="login-area">
+                <div id="googleSignInButton" class="g-signin-button">
+                    <div id="buttonDiv"></div>
+                </div>
+                <div id="userProfile" class="user-profile" style="display: none;">
+                    <img id="userImage" alt="Foto do usuário" class="user-image">
+                    <span id="userName" class="user-name"></span>
+                    <button id="signOutButton" class="btn-logout">Sair</button>
+                </div>
+            </div>
         </div>
     </nav>
 
@@ -46,6 +59,8 @@
     </footer>
 
     <script src="../assets/js/app.js"></script>
+    <!-- Script de autenticação do Google -->
+    <script type="module" src="../assets/js/services/authService.js"></script>
     <script>
         // Exemplo de carregamento de registros (substitua pelo seu método real)
         document.addEventListener('DOMContentLoaded', function() {
