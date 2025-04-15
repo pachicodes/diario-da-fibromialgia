@@ -8,8 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Biblioteca do Google Sign-In -->
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <!-- Removida a biblioteca do Google Sign-In -->
 </head>
 <body>
     <header class="header">
@@ -25,17 +24,7 @@
                 <li class="active"><a href="registrar.html">Registrar</a></li>
                 <li><a href="registros.html">Registros</a></li>
             </ul>
-            <!-- Área de login -->
-            <div class="login-area">
-                <div id="googleSignInButton" class="g-signin-button">
-                    <div id="buttonDiv"></div>
-                </div>
-                <div id="userProfile" class="user-profile" style="display: none;">
-                    <img id="userImage" alt="Foto do usuário" class="user-image">
-                    <span id="userName" class="user-name"></span>
-                    <button id="signOutButton" class="btn-logout">Sair</button>
-                </div>
-            </div>
+            <!-- Área de login removida -->
         </div>
     </nav>
     <main class="main-content">
@@ -58,11 +47,6 @@
 
                 <button type="submit" class="btn btn-primary">Salvar registro</button>
             </form>
-
-            <section class="history" id="registrosSection">
-                <h2>Registros</h2>
-                <ul id="registrosLista"></ul>
-            </section>
         </div>
     </main>
     <footer class="footer">
@@ -70,8 +54,70 @@
             <p>&copy; 2025 Diário de Fibromialgia</p>
         </div>
     </footer>
-    <script type="module" src="assets/js/app.js"></script>
-    <!-- Script de autenticação do Google -->
-    <script type="module" src="../assets/js/services/authService.js"></script>
+    <!-- Removida a referência ao app.js para evitar conflito -->
+    <!-- Script de autenticação do Google removido -->
+    
+    <script type="module">
+        import { saveEntry } from '../assets/js/services/dataService.js';
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Define a data de hoje como valor padrão
+            document.getElementById('data').valueAsDate = new Date();
+            
+            // Configurar o formulário
+            const registroForm = document.getElementById('registroForm');
+            registroForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Monta a data/hora combinando os campos
+                let dataHora;
+                if (registroForm.hora.value) {
+                    dataHora = registroForm.data.value + 'T' + registroForm.hora.value;
+                } else {
+                    dataHora = registroForm.data.value;
+                }
+                
+                const registro = {
+                    data: dataHora,
+                    dor: parseInt(registroForm.dor.value),
+                    fadiga: parseInt(registroForm.fadiga.value),
+                    notas: registroForm.anotacoes.value.trim()
+                };
+                
+                try {
+                    // Salva o registro usando o dataService
+                    const novoRegistro = saveEntry(registro);
+                    console.log('Registro salvo com sucesso:', novoRegistro);
+                    
+                    // Resetar o formulário e mostrar mensagem
+                    registroForm.reset();
+                    document.getElementById('data').valueAsDate = new Date();
+                    showMessage('Registro salvo com sucesso! Consulte a página de Registros para ver seu histórico.', 'success');
+                } catch (erro) {
+                    console.error('Erro ao salvar registro:', erro);
+                    showMessage('Erro ao salvar registro: ' + erro.message, 'error');
+                }
+            });
+            
+            function showMessage(text, type) {
+                const messageEl = document.createElement('div');
+                messageEl.className = `message message-${type}`;
+                messageEl.textContent = text;
+                
+                document.body.appendChild(messageEl);
+                
+                setTimeout(() => {
+                    messageEl.classList.add('show');
+                }, 10);
+                
+                setTimeout(() => {
+                    messageEl.classList.remove('show');
+                    setTimeout(() => {
+                        document.body.removeChild(messageEl);
+                    }, 300);
+                }, 3000);
+            }
+        });
+    </script>
 </body>
 </html>
