@@ -1,4 +1,4 @@
-# Gerenciando sua fibromialgia
+# Diário da Fibromialgia
 
 Este projeto é um diário de fibromialgia que permite as usuárias registrar e acompanhar seus níveis de dor e fadiga, principais sintomas da doença.
 A aplicação é construída em JavaScript e utiliza HTML e CSS para a interface da usuária.

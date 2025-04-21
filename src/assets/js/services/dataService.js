@@ -1,4 +1,4 @@
-// Serviço para gerenciamento de dados do diário de fibromialgia
+// Serviço para gerenciamento de dados do diário da fibromialgia
 const STORAGE_KEY = 'fibromyalgiaDiary';
 
 /**
