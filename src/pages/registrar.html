@@ -30,17 +30,26 @@
     <main class="main-content">
         <div class="container">
             <form id="registroForm" class="symptom-form">
-                <label for="data">Data:</label>
-                <input type="date" id="data" name="data" required>
+                <div class="form-row">
+                    <div class="form-group-inline">
+                        <label for="data">Data:</label>
+                        <input type="date" id="data" name="data" required>
+                    </div>
+                    <div class="form-group-inline">
+                        <label for="hora">Hora (opcional):</label>
+                        <input type="time" id="hora" name="hora">
+                    </div>
+                </div>
 
-                <label for="hora">Hora (opcional):</label>
-                <input type="time" id="hora" name="hora">
+                <div class="slider-container">
+                    <label for="dor">Nível de dor: <span id="dorValor">1</span></label>
+                    <input type="range" id="dor" name="dor" min="1" max="10" value="1" required>
+                </div>
 
-                <label for="dor">Nível de dor (1-10):</label>
-                <input type="number" id="dor" name="dor" min="1" max="10" value="1" required>
-
-                <label for="fadiga">Nível de fadiga (1-10):</label>
-                <input type="number" id="fadiga" name="fadiga" min="1" max="10" value="1" required>
+                <div class="slider-container">
+                    <label for="fadiga">Nível de fadiga: <span id="fadigaValor">1</span></label>
+                    <input type="range" id="fadiga" name="fadiga" min="1" max="10" value="1" required>
+                </div>
 
                 <label for="anotacoes">Anotações:</label>
                 <textarea id="anotacoes" name="anotacoes" rows="3" placeholder="Outros sintomas, gatilhos, medicamentos, etc..."></textarea>
@@ -64,6 +73,24 @@
             // Define a data de hoje como valor padrão
             document.getElementById('data').valueAsDate = new Date();
             
+            // Configurar sliders e seus displays
+            const dorSlider = document.getElementById('dor');
+            const dorValorSpan = document.getElementById('dorValor');
+            const fadigaSlider = document.getElementById('fadiga');
+            const fadigaValorSpan = document.getElementById('fadigaValor');
+
+            // Inicializa os valores dos spans
+            dorValorSpan.textContent = dorSlider.value;
+            fadigaValorSpan.textContent = fadigaSlider.value;
+
+            // Atualiza os spans quando os sliders mudam
+            dorSlider.addEventListener('input', () => {
+                dorValorSpan.textContent = dorSlider.value;
+            });
+            fadigaSlider.addEventListener('input', () => {
+                fadigaValorSpan.textContent = fadigaSlider.value;
+            });
+
             // Configurar o formulário
             const registroForm = document.getElementById('registroForm');
             registroForm.addEventListener('submit', function(e) {
@@ -79,8 +106,8 @@
                 
                 const registro = {
                     data: dataHora,
-                    dor: parseInt(registroForm.dor.value),
-                    fadiga: parseInt(registroForm.fadiga.value),
+                    dor: parseInt(dorSlider.value), // Lê do slider
+                    fadiga: parseInt(fadigaSlider.value), // Lê do slider
                     notas: registroForm.anotacoes.value.trim()
                 };
                 
@@ -92,6 +119,12 @@
                     // Resetar o formulário e mostrar mensagem
                     registroForm.reset();
                     document.getElementById('data').valueAsDate = new Date();
+                    // Reseta os sliders e spans para o valor padrão
+                    dorSlider.value = 1;
+                    fadigaSlider.value = 1;
+                    dorValorSpan.textContent = '1';
+                    fadigaValorSpan.textContent = '1';
+
                     showMessage('Registro salvo com sucesso! Consulte a página de Registros para ver seu histórico.', 'success');
                 } catch (erro) {
                     console.error('Erro ao salvar registro:', erro);
@@ -100,22 +133,33 @@
             });
             
             function showMessage(text, type) {
+                // Remove mensagens existentes para evitar acúmulo
+                const existingMessages = document.querySelectorAll('.message');
+                existingMessages.forEach(msg => msg.remove());
+
                 const messageEl = document.createElement('div');
                 messageEl.className = `message message-${type}`;
                 messageEl.textContent = text;
-                
+
+                // Adiciona ao body ou a um container específico se preferir
                 document.body.appendChild(messageEl);
-                
-                setTimeout(() => {
-                    messageEl.classList.add('show');
-                }, 10);
-                
+
+                // Força reflow para garantir que a transição ocorra
+                void messageEl.offsetWidth;
+
+                // Adiciona a classe 'show' para iniciar a animação
+                messageEl.classList.add('show');
+
+                // Remove a mensagem após alguns segundos
                 setTimeout(() => {
                     messageEl.classList.remove('show');
-                    setTimeout(() => {
-                        document.body.removeChild(messageEl);
-                    }, 300);
-                }, 3000);
+                    // Espera a transição de saída terminar antes de remover o elemento
+                    messageEl.addEventListener('transitionend', () => {
+                         if (messageEl.parentNode) {
+                            messageEl.remove();
+                         }
+                    }, { once: true }); // Garante que o listener seja removido após a execução
+                }, 3000); // Tempo que a mensagem fica visível
             }
         });
     </script>

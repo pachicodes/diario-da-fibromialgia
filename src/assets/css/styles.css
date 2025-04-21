@@ -310,9 +310,25 @@ select {
     transition: all 0.3s ease;
 }
 
+/* Ajuste para campos de data e hora */
+input[type="date"],
+input[type="time"] {
+    width: auto; /* Permite que o navegador defina uma largura padrão */
+    max-width: 200px; /* Define uma largura máxima */
+    padding: 16px 20px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    margin-bottom: 28px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
 input:focus,
 textarea:focus,
-select:focus {
+select:focus,
+input[type="date"]:focus,
+input[type="time"]:focus {
     outline: none;
     border-color: var(--primary-color);
     box-shadow: 0 0 0 4px rgba(138, 79, 255, 0.1);
@@ -710,6 +726,33 @@ button:hover {
     margin-bottom: 24px;
 }
 
+/* Novo: Estilo para agrupar campos na mesma linha */
+.form-row {
+    display: flex;
+    gap: 20px; /* Espaço entre os grupos de data e hora */
+    align-items: flex-end; /* Alinha os itens na base */
+    margin-bottom: 28px; /* Mantém a margem inferior */
+}
+
+.form-group-inline {
+    display: flex;
+    flex-direction: column; /* Coloca label acima do input */
+    flex-grow: 1; /* Permite que os grupos cresçam se necessário */
+}
+
+.form-group-inline label {
+    margin-bottom: 8px; /* Reduz a margem abaixo do label */
+    margin-top: 0; /* Remove margem superior do label dentro do grupo */
+}
+
+/* Ajusta a margem inferior dos inputs dentro do grupo inline */
+.form-group-inline input[type="date"],
+.form-group-inline input[type="time"] {
+    margin-bottom: 0;
+    width: 100%; /* Faz com que ocupem o espaço disponível no flex container */
+    max-width: none; /* Remove a largura máxima anterior para permitir flexibilidade */
+}
+
 .form-actions {
     display: flex;
     justify-content: flex-end;
@@ -759,4 +802,69 @@ button:hover {
 
 .message-info {
     background-color: var(--primary-color);
+}
+
+/* Estilos para sliders na página de registro */
+.slider-container {
+    margin-bottom: 1.5rem; /* Ajuste de margem */
+}
+
+.slider-container label {
+    display: block;
+    margin-bottom: 0.8rem; /* Espaço entre label e slider */
+    font-weight: 500;
+}
+
+.slider-container input[type="range"] {
+    width: 100%;
+    height: 8px;
+    cursor: pointer;
+    appearance: none; /* Remove estilos padrão */
+    background: linear-gradient(to right, var(--primary-light), var(--primary-color)); /* Gradiente no track */
+    border-radius: 5px;
+    outline: none;
+    transition: opacity 0.2s;
+    margin-bottom: 0; /* Remove margem padrão do input */
+}
+
+/* Estilo do "polegar" (thumb) do slider para Webkit/Blink (Chrome, Safari, Edge) */
+.slider-container input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    width: 22px;
+    height: 22px;
+    background: var(--primary-color);
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease;
+}
+
+.slider-container input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.1);
+}
+
+/* Estilo do "polegar" (thumb) do slider para Firefox */
+.slider-container input[type="range"]::-moz-range-thumb {
+    width: 22px;
+    height: 22px;
+    background: var(--primary-color);
+    border-radius: 50%;
+    cursor: pointer;
+    border: none; /* Remove borda padrão do Firefox */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease;
+}
+
+.slider-container input[type="range"]::-moz-range-thumb:hover {
+    transform: scale(1.1);
+}
+
+/* Estilo para o span que mostra o valor */
+.slider-container span {
+    display: inline-block;
+    min-width: 25px; /* Garante espaço mínimo */
+    text-align: center;
+    font-weight: 600;
+    color: var(--primary-dark);
+    margin-left: 5px; /* Espaço entre o texto e o número */
 }
