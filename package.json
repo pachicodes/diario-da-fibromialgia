@@ -2,9 +2,10 @@
   "name": "gerenciando-fibromialgia",
   "version": "1.0.0",
   "description": "Diário da Fibromialgia: Aplicação web para pessoas com fibromialgia registrarem e acompanharem níveis de dor e fadiga diariamente",
-  "main": "src/assets/js/app.js",
+  "main": "assets/js/app.js",
   "scripts": {
-    "start": "http-server ./src -p 3000 -o"
+    "start": "http-server . -p 3000 -o",
+    "dev": "http-server . -p 3000 -o"
   },
   "keywords": [
     "fibromialgia",
