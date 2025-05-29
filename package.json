@@ -5,7 +5,10 @@
   "main": "assets/js/app.js",
   "scripts": {
     "start": "http-server . -p 3000 -o",
-    "dev": "http-server . -p 3000 -o"
+    "dev": "http-server . -p 3000 -o",
+    "build": "cp -r *.html assets pages dist/",
+    "sync": "npm run build && npx cap sync",
+    "android": "npm run sync && npx cap open android"
   },
   "keywords": [
     "fibromialgia",
@@ -27,5 +30,9 @@
   "bugs": {
     "url": "https://github.com/pachicodes/gerenciando-fibromialgia/issues"
   },
-  "homepage": "https://github.com/pachicodes/gerenciando-fibromialgia#readme"
+  "homepage": "https://github.com/pachicodes/gerenciando-fibromialgia#readme",
+  "dependencies": {
+    "@capacitor/android": "^7.2.0",
+    "@capacitor/ios": "^7.2.0"
+  }
 }

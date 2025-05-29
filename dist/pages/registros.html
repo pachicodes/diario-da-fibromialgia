@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registros | Diário da Fibromialgia</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Removida a biblioteca do Google Sign-In -->
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <h1>Diário da Fibromialgia</h1>
+            <p class="tagline">Seu diário para acompanhamento de sintomas e bem-estar</p>
+        </div>
+    </header>
+
+    <nav class="main-nav">
+        <div class="container nav-container">
+            <ul>
+                <li><a href="../index.html">Início</a></li>
+                <li><a href="registrar.html">Registrar</a></li>
+                <li class="active"><a href="registros.html">Registros</a></li>
+                <li><a href="sobre.html">Sobre Fibromialgia</a></li>
+            </ul>
+            <!-- Área de login removida -->
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="container">
+            <section class="records-section">
+                <h2>Meus Registros</h2>
+                <p class="form-subtitle">Veja o histórico dos seus registros diários</p>
+                <div id="recordsList" class="records-list">
+                    <!-- Os registros serão exibidos aqui via JavaScript -->
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Modal de Edição -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3>Editar Registro</h3>
+            
+            <form id="editForm" class="symptom-form">
+                <input type="hidden" id="editEntryId">
+                
+                <div class="form-group">
+                    <label for="editData">Data:</label>
+                    <input type="date" id="editData" name="data" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="editHora">Hora (opcional):</label>
+                    <input type="time" id="editHora" name="hora">
+                </div>
+
+                <div class="form-group">
+                    <label for="editDor">Nível de dor (1-10):</label>
+                    <div class="slider-with-value">
+                        <input type="range" id="editDor" name="dor" min="1" max="10" value="5" class="slider" required>
+                        <span id="editDorValue" class="slider-value">5</span>
+                    </div>
+                    <div class="slider-labels">
+                        <span>Leve</span>
+                        <span>Moderada</span>
+                        <span>Intensa</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="editFadiga">Nível de fadiga (1-10):</label>
+                    <div class="slider-with-value">
+                        <input type="range" id="editFadiga" name="fadiga" min="1" max="10" value="5" class="slider" required>
+                        <span id="editFadigaValue" class="slider-value">5</span>
+                    </div>
+                    <div class="slider-labels">
+                        <span>Leve</span>
+                        <span>Moderada</span>
+                        <span>Intensa</span>
+                    </div>
+                </div>
+
+                <div class="form-group notes-container">
+                    <label for="editNotas">Anotações:</label>
+                    <textarea id="editNotas" name="notas" rows="3" placeholder="Outros sintomas, gatilhos, medicamentos, etc..."></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Salvar alterações</button>
+                    <button type="button" id="cancelEdit" class="btn btn-secondary">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Diário da Fibromialgia | Apoiando pessoas com fibromialgia</p>
+        </div>
+    </footer>
+
+    <script type="module" src="../assets/js/app.js"></script>
+    <!-- Removido script de autenticação do Google -->
+    <script type="module">
+        import { getEntries, editEntry, deleteEntry } from '../assets/js/services/dataService.js';
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadRegistros();
+            setupModalListeners();
+            setupSliders();
+        });
+
+        // Carrega e exibe registros
+        function loadRegistros() {
+            const recordsList = document.getElementById('recordsList');
+            const registros = getEntries();
+            
+            if (registros.length === 0) {
+                recordsList.innerHTML = '<p>Nenhum registro encontrado.</p>';
+            } else {
+                // Ordena os registros pela data (mais recentes primeiro)
+                registros.sort((a, b) => new Date(b.data) - new Date(a.data));
+                
+                recordsList.innerHTML = registros.map(r => `
+                    <div class="record-item">
+                        <div class="record-header">
+                            <h4>Registro de ${formatarData(r.data)}</h4>
+                            <div class="record-actions">
+                                <button class="edit-btn" data-id="${r.id}">Editar</button>
+                                <button class="delete-btn" data-id="${r.id}">Excluir</button>
+                            </div>
+                        </div>
+                        <div class="record-body">
+                            <div class="record-field"><strong>Data:</strong> ${formatarData(r.data)}</div>
+                            ${r.hora ? `<div class="record-field"><strong>Hora:</strong> ${r.hora}</div>` : ''}
+                            <div class="record-field"><strong>Dor:</strong> ${r.dor} / 10</div>
+                            <div class="record-field"><strong>Fadiga:</strong> ${r.fadiga} / 10</div>
+                            ${r.notas ? `<div class="record-field"><strong>Anotações:</strong> ${r.notas}</div>` : ''}
+                        </div>
+                    </div>
+                `).join('');
+                
+                // Adiciona eventos aos botões
+                setupButtonListeners();
+            }
+        }
+        
+        // Configura os ouvintes para os botões de editar e excluir
+        function setupButtonListeners() {
+            // Eventos para botões de editar
+            document.querySelectorAll('.edit-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = this.getAttribute('data-id');
+                    openEditModal(id);
+                });
+            });
+            
+            // Eventos para botões de excluir
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = this.getAttribute('data-id');
+                    confirmDelete(id);
+                });
+            });
+        }
+        
+        // Abre o modal de edição e preenche com os dados do registro
+        function openEditModal(id) {
+            const registros = getEntries();
+            const registro = registros.find(r => r.id === id);
+            
+            if (registro) {
+                document.getElementById('editEntryId').value = id;
+                document.getElementById('editData').value = registro.data;
+                document.getElementById('editHora').value = registro.hora || '';
+                
+                const dorSlider = document.getElementById('editDor');
+                dorSlider.value = registro.dor;
+                document.getElementById('editDorValue').textContent = registro.dor;
+                
+                const fadigaSlider = document.getElementById('editFadiga');
+                fadigaSlider.value = registro.fadiga;
+                document.getElementById('editFadigaValue').textContent = registro.fadiga;
+                
+                document.getElementById('editNotas').value = registro.notas || '';
+                
+                document.getElementById('editModal').style.display = 'flex';
+            } else {
+                alert('Registro não encontrado!');
+            }
+        }
+        
+        // Configura listeners do modal
+        function setupModalListeners() {
+            // Fechar modal
+            document.querySelector('.close-modal').addEventListener('click', closeModal);
+            document.getElementById('cancelEdit').addEventListener('click', closeModal);
+            
+            // Quando clica fora do modal, fecha
+            window.addEventListener('click', function(event) {
+                const modal = document.getElementById('editModal');
+                if (event.target === modal) {
+                    closeModal();
+                }
+            });
+            
+            // Submit do formulário de edição
+            document.getElementById('editForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const id = document.getElementById('editEntryId').value;
+                const data = document.getElementById('editData').value;
+                const hora = document.getElementById('editHora').value;
+                const dor = parseInt(document.getElementById('editDor').value);
+                const fadiga = parseInt(document.getElementById('editFadiga').value);
+                const notas = document.getElementById('editNotas').value;
+                
+                const updatedData = {
+                    data,
+                    hora,
+                    dor,
+                    fadiga,
+                    notas
+                };
+                
+                const success = editEntry(id, updatedData);
+                
+                if (success) {
+                    closeModal();
+                    loadRegistros();
+                    showMessage('Registro atualizado com sucesso!', 'success');
+                } else {
+                    showMessage('Erro ao atualizar o registro.', 'error');
+                }
+            });
+        }
+        
+        // Configura os sliders para atualizar o valor exibido
+        function setupSliders() {
+            const dorSlider = document.getElementById('editDor');
+            const dorValue = document.getElementById('editDorValue');
+            
+            dorSlider.addEventListener('input', function() {
+                dorValue.textContent = this.value;
+            });
+            
+            const fadigaSlider = document.getElementById('editFadiga');
+            const fadigaValue = document.getElementById('editFadigaValue');
+            
+            fadigaSlider.addEventListener('input', function() {
+                fadigaValue.textContent = this.value;
+            });
+        }
+        
+        // Confirma exclusão de um registro
+        function confirmDelete(id) {
+            if (confirm('Tem certeza que deseja excluir este registro?')) {
+                const success = deleteEntry(id);
+                
+                if (success) {
+                    loadRegistros();
+                    showMessage('Registro excluído com sucesso!', 'success');
+                } else {
+                    showMessage('Erro ao excluir o registro.', 'error');
+                }
+            }
+        }
+        
+        // Fecha o modal
+        function closeModal() {
+            document.getElementById('editModal').style.display = 'none';
+        }
+        
+        // Exibe mensagem temporária
+        function showMessage(text, type) {
+            const messageEl = document.createElement('div');
+            messageEl.className = `message message-${type}`;
+            messageEl.textContent = text;
+            
+            document.body.appendChild(messageEl);
+            
+            setTimeout(() => {
+                messageEl.classList.add('show');
+            }, 10);
+            
+            setTimeout(() => {
+                messageEl.classList.remove('show');
+                setTimeout(() => {
+                    document.body.removeChild(messageEl);
+                }, 300);
+            }, 3000);
+        }
+        
+        // Formata a data no formato brasileiro
+        function formatarData(dataString) {
+            const data = new Date(dataString);
+            return data.toLocaleDateString('pt-BR');
+        }
+    </script>
+</body>
+</html>

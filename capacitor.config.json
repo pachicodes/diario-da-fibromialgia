@@ -1,5 +1,5 @@
 {
-  "appId": "com.pachicodes.fibtomialgia",
+  "appId": "com.pachicodes.fibromialgia",
   "appName": "Diario da Fibromialgia",
-  "webDir": "."
+  "webDir": "dist"
 }

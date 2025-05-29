@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diário da Fibromialgia</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Removida a biblioteca do Google Sign-In -->
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <h1>Diário da Fibromialgia</h1>
+            <p class="tagline">Registre seus níveis de dor e fadiga de forma simples</p>
+        </div>
+    </header>
+    <nav class="main-nav">
+        <div class="container nav-container">
+            <ul>
+                <li><a href="../index.html">Início</a></li>
+                <li class="active"><a href="registrar.html">Registrar</a></li>
+                <li><a href="registros.html">Registros</a></li>
+                <li><a href="sobre.html">Sobre Fibromialgia</a></li>
+            </ul>
+            <!-- Área de login removida -->
+        </div>
+    </nav>
+    <main class="main-content">
+        <div class="container">
+            <form id="registroForm" class="symptom-form">
+                <div class="form-row">
+                    <div class="form-group-inline">
+                        <label for="data">Data:</label>
+                        <input type="date" id="data" name="data" required>
+                    </div>
+                    <div class="form-group-inline">
+                        <label for="hora">Hora (opcional):</label>
+                        <input type="time" id="hora" name="hora">
+                    </div>
+                </div>
+
+                <div class="slider-container">
+                    <label for="dor">Nível de dor: <span id="dorValor">1</span></label>
+                    <input type="range" id="dor" name="dor" min="1" max="10" value="1" required>
+                </div>
+
+                <div class="slider-container">
+                    <label for="fadiga">Nível de fadiga: <span id="fadigaValor">1</span></label>
+                    <input type="range" id="fadiga" name="fadiga" min="1" max="10" value="1" required>
+                </div>
+
+                <label for="anotacoes">Anotações:</label>
+                <textarea id="anotacoes" name="anotacoes" rows="3" placeholder="Outros sintomas, gatilhos, medicamentos, etc..."></textarea>
+
+                <button type="submit" class="btn btn-primary">Salvar registro</button>
+            </form>
+        </div>
+    </main>
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Diário da Fibromialgia</p>
+        </div>
+    </footer>
+    <!-- Removida a referência ao app.js para evitar conflito -->
+    <!-- Script de autenticação do Google removido -->
+    
+    <script type="module">
+        import { saveEntry } from '../assets/js/services/dataService.js';
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Define a data de hoje como valor padrão
+            document.getElementById('data').valueAsDate = new Date();
+            
+            // Configurar sliders e seus displays
+            const dorSlider = document.getElementById('dor');
+            const dorValorSpan = document.getElementById('dorValor');
+            const fadigaSlider = document.getElementById('fadiga');
+            const fadigaValorSpan = document.getElementById('fadigaValor');
+
+            // Inicializa os valores dos spans
+            dorValorSpan.textContent = dorSlider.value;
+            fadigaValorSpan.textContent = fadigaSlider.value;
+
+            // Atualiza os spans quando os sliders mudam
+            dorSlider.addEventListener('input', () => {
+                dorValorSpan.textContent = dorSlider.value;
+            });
+            fadigaSlider.addEventListener('input', () => {
+                fadigaValorSpan.textContent = fadigaSlider.value;
+            });
+
+            // Configurar o formulário
+            const registroForm = document.getElementById('registroForm');
+            registroForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Monta a data/hora combinando os campos
+                let dataHora;
+                if (registroForm.hora.value) {
+                    dataHora = registroForm.data.value + 'T' + registroForm.hora.value;
+                } else {
+                    dataHora = registroForm.data.value;
+                }
+                
+                const registro = {
+                    data: dataHora,
+                    dor: parseInt(dorSlider.value), // Lê do slider
+                    fadiga: parseInt(fadigaSlider.value), // Lê do slider
+                    notas: registroForm.anotacoes.value.trim()
+                };
+                
+                try {
+                    // Salva o registro usando o dataService
+                    const novoRegistro = saveEntry(registro);
+                    console.log('Registro salvo com sucesso:', novoRegistro);
+                    
+                    // Resetar o formulário e mostrar mensagem
+                    registroForm.reset();
+                    document.getElementById('data').valueAsDate = new Date();
+                    // Reseta os sliders e spans para o valor padrão
+                    dorSlider.value = 1;
+                    fadigaSlider.value = 1;
+                    dorValorSpan.textContent = '1';
+                    fadigaValorSpan.textContent = '1';
+
+                    showMessage('Registro salvo com sucesso! Consulte a página de Registros para ver seu histórico.', 'success');
+                } catch (erro) {
+                    console.error('Erro ao salvar registro:', erro);
+                    showMessage('Erro ao salvar registro: ' + erro.message, 'error');
+                }
+            });
+            
+            function showMessage(text, type) {
+                // Remove mensagens existentes para evitar acúmulo
+                const existingMessages = document.querySelectorAll('.message');
+                existingMessages.forEach(msg => msg.remove());
+
+                const messageEl = document.createElement('div');
+                messageEl.className = `message message-${type}`;
+                messageEl.textContent = text;
+
+                // Adiciona ao body ou a um container específico se preferir
+                document.body.appendChild(messageEl);
+
+                // Força reflow para garantir que a transição ocorra
+                void messageEl.offsetWidth;
+
+                // Adiciona a classe 'show' para iniciar a animação
+                messageEl.classList.add('show');
+
+                // Remove a mensagem após alguns segundos
+                setTimeout(() => {
+                    messageEl.classList.remove('show');
+                    // Espera a transição de saída terminar antes de remover o elemento
+                    messageEl.addEventListener('transitionend', () => {
+                         if (messageEl.parentNode) {
+                            messageEl.remove();
+                         }
+                    }, { once: true }); // Garante que o listener seja removido após a execução
+                }, 3000); // Tempo que a mensagem fica visível
+            }
+        });
+    </script>
+</body>
+</html>
