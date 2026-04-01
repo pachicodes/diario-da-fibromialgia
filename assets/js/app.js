@@ -1,5 +1,6 @@
 import PainTracker from './components/painTracker.js';
 import FatigueTracker from './components/fatigueTracker.js';
+import { getEntries, saveEntry } from './services/dataService.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     const painTracker = new PainTracker();
@@ -24,60 +25,112 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Novo app simplificado para registro e exibição dos dados
     const form = document.getElementById('registroForm');
     const lista = document.getElementById('registrosLista');
 
-    function carregarRegistros() {
-        try {
-            const registros = JSON.parse(localStorage.getItem('fibroRegistros') || '[]');
-            console.log('Registros carregados:', registros);
+    if (form && lista) {
+        function getEntryDateValue(entry) {
+            if (!entry?.data) {
+                return '';
+            }
+
+            if (entry.data.includes('T')) {
+                return entry.data.split('T')[0];
+            }
+
+            return entry.data;
+        }
+
+        function getEntryTimeValue(entry) {
+            if (entry?.hora) {
+                return entry.hora;
+            }
+
+            if (entry?.data && entry.data.includes('T')) {
+                return entry.data.split('T')[1].slice(0, 5);
+            }
+
+            return '';
+        }
+
+        function formatEntryDate(entry) {
+            const dateValue = getEntryDateValue(entry);
+
+            if (!dateValue) {
+                return 'Data não informada';
+            }
+
+            const parsedDate = new Date(`${dateValue}T00:00:00`);
+
+            if (Number.isNaN(parsedDate.getTime())) {
+                return dateValue;
+            }
+
+            const formattedDate = parsedDate.toLocaleDateString('pt-BR');
+            const formattedTime = getEntryTimeValue(entry);
+
+            return formattedTime ? `${formattedDate} às ${formattedTime}` : formattedDate;
+        }
+
+        function carregarRegistros() {
             lista.innerHTML = '';
+
+            const registros = getEntries().slice().reverse();
+
             if (registros.length === 0) {
-                lista.innerHTML = '<li>Nenhum registro ainda.</li>';
+                const emptyItem = document.createElement('li');
+                emptyItem.className = 'empty-state';
+                emptyItem.textContent = 'Nenhum registro ainda.';
+                lista.appendChild(emptyItem);
                 return;
             }
-            registros.reverse().forEach(registro => {
-                const li = document.createElement('li');
-                li.className = 'record';
-                li.innerHTML = `<strong>${new Date(registro.data).toLocaleString('pt-BR')}</strong><br>
-                    Dor: <b>${registro.dor}</b> | Fadiga: <b>${registro.fadiga}</b><br>
-                    <em>${registro.anotacoes ? registro.anotacoes : ''}</em>`;
-                lista.appendChild(li);
+
+            registros.forEach((registro) => {
+                const item = document.createElement('li');
+                item.className = 'record';
+
+                const strong = document.createElement('strong');
+                strong.textContent = formatEntryDate(registro);
+
+                const metrics = document.createElement('p');
+                metrics.textContent = `Dor: ${registro.dor} | Fadiga: ${registro.fadiga}`;
+
+                item.appendChild(strong);
+                item.appendChild(document.createElement('br'));
+                item.appendChild(metrics);
+
+                const notes = (registro.anotacoes || registro.notas || '').trim();
+                if (notes) {
+                    const notesEl = document.createElement('em');
+                    notesEl.textContent = notes;
+                    item.appendChild(notesEl);
+                }
+
+                lista.appendChild(item);
             });
-        } catch (erro) {
-            console.error('Erro ao carregar registros:', erro);
-            alert('Erro ao carregar registros. Veja o console para detalhes.');
         }
+
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
+
+            const registro = {
+                data: form.data.value,
+                hora: form.hora.value || '',
+                dor: form.dor.value,
+                fadiga: form.fadiga.value,
+                anotacoes: form.anotacoes.value.trim()
+            };
+
+            try {
+                saveEntry(registro);
+                form.reset();
+                carregarRegistros();
+            } catch (erro) {
+                console.error('Erro ao salvar registro:', erro);
+                alert('Erro ao salvar registro. Veja o console para detalhes.');
+            }
+        });
+
+        carregarRegistros();
     }
-
-    form.onsubmit = function(e) {
-        e.preventDefault();
-        // Monta a data/hora combinando os campos
-        let dataHora;
-        if (form.hora.value) {
-            dataHora = form.data.value + 'T' + form.hora.value;
-        } else {
-            dataHora = form.data.value;
-        }
-        const registro = {
-            data: dataHora,
-            dor: form.dor.value,
-            fadiga: form.fadiga.value,
-            anotacoes: form.anotacoes.value.trim()
-        };
-        try {
-            const registros = JSON.parse(localStorage.getItem('fibroRegistros') || '[]');
-            registros.push(registro);
-            localStorage.setItem('fibroRegistros', JSON.stringify(registros));
-            console.log('Registro salvo:', registro);
-            form.reset();
-            carregarRegistros();
-        } catch (erro) {
-            console.error('Erro ao salvar registro:', erro);
-            alert('Erro ao salvar registro. Veja o console para detalhes.');
-        }
-    };
-
-    carregarRegistros();
 });

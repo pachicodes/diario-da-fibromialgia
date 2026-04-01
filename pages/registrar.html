@@ -55,6 +55,8 @@
                 <label for="anotacoes">Anotações:</label>
                 <textarea id="anotacoes" name="anotacoes" rows="3" placeholder="Outros sintomas, gatilhos, medicamentos, etc..."></textarea>
 
+                <div id="formStatus" class="form-status" role="status" aria-live="polite" aria-atomic="true"></div>
+
                 <button type="submit" class="btn btn-primary">Salvar registro</button>
             </form>
         </div>
@@ -79,6 +81,7 @@
             const dorValorSpan = document.getElementById('dorValor');
             const fadigaSlider = document.getElementById('fadiga');
             const fadigaValorSpan = document.getElementById('fadigaValor');
+            const formStatus = document.getElementById('formStatus');
 
             // Inicializa os valores dos spans
             dorValorSpan.textContent = dorSlider.value;
@@ -97,19 +100,12 @@
             registroForm.addEventListener('submit', function(e) {
                 e.preventDefault();
                 
-                // Monta a data/hora combinando os campos
-                let dataHora;
-                if (registroForm.hora.value) {
-                    dataHora = registroForm.data.value + 'T' + registroForm.hora.value;
-                } else {
-                    dataHora = registroForm.data.value;
-                }
-                
                 const registro = {
-                    data: dataHora,
-                    dor: parseInt(dorSlider.value), // Lê do slider
-                    fadiga: parseInt(fadigaSlider.value), // Lê do slider
-                    notas: registroForm.anotacoes.value.trim()
+                    data: registroForm.data.value,
+                    hora: registroForm.hora.value || '',
+                    dor: parseInt(dorSlider.value, 10),
+                    fadiga: parseInt(fadigaSlider.value, 10),
+                    anotacoes: registroForm.anotacoes.value.trim()
                 };
                 
                 try {
@@ -134,33 +130,14 @@
             });
             
             function showMessage(text, type) {
-                // Remove mensagens existentes para evitar acúmulo
-                const existingMessages = document.querySelectorAll('.message');
-                existingMessages.forEach(msg => msg.remove());
+                formStatus.className = `form-status form-status-${type}`;
+                formStatus.textContent = text;
 
-                const messageEl = document.createElement('div');
-                messageEl.className = `message message-${type}`;
-                messageEl.textContent = text;
-
-                // Adiciona ao body ou a um container específico se preferir
-                document.body.appendChild(messageEl);
-
-                // Força reflow para garantir que a transição ocorra
-                void messageEl.offsetWidth;
-
-                // Adiciona a classe 'show' para iniciar a animação
-                messageEl.classList.add('show');
-
-                // Remove a mensagem após alguns segundos
-                setTimeout(() => {
-                    messageEl.classList.remove('show');
-                    // Espera a transição de saída terminar antes de remover o elemento
-                    messageEl.addEventListener('transitionend', () => {
-                         if (messageEl.parentNode) {
-                            messageEl.remove();
-                         }
-                    }, { once: true }); // Garante que o listener seja removido após a execução
-                }, 3000); // Tempo que a mensagem fica visível
+                window.clearTimeout(formStatus._clearTimer);
+                formStatus._clearTimer = window.setTimeout(() => {
+                    formStatus.textContent = '';
+                    formStatus.className = 'form-status';
+                }, 4500);
             }
         });
     </script>

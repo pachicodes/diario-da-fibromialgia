@@ -35,7 +35,7 @@
             <section class="records-section">
                 <h2>Meus Registros</h2>
                 <p class="form-subtitle">Veja o histórico dos seus registros diários</p>
-                <div id="recordsList" class="records-list">
+                <div id="recordsList" class="records-list" role="list" aria-live="polite" aria-label="Lista de registros">
                     <!-- Os registros serão exibidos aqui via JavaScript -->
                 </div>
             </section>
@@ -43,10 +43,10 @@
     </main>
 
     <!-- Modal de Edição -->
-    <div id="editModal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal">&times;</span>
-            <h3>Editar Registro</h3>
+    <div id="editModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="editModalTitle">
+        <div class="modal-content" tabindex="-1">
+            <button type="button" class="close-modal" aria-label="Fechar modal">&times;</button>
+            <h3 id="editModalTitle">Editar Registro</h3>
             
             <form id="editForm" class="symptom-form">
                 <input type="hidden" id="editEntryId">
@@ -106,7 +106,6 @@
         </div>
     </footer>
 
-    <script type="module" src="../assets/js/app.js"></script>
     <!-- Removido script de autenticação do Google -->
     <script type="module">
         import { getEntries, editEntry, deleteEntry } from '../assets/js/services/dataService.js';
@@ -123,13 +122,13 @@
             const registros = getEntries();
             
             if (registros.length === 0) {
-                recordsList.innerHTML = '<p>Nenhum registro encontrado.</p>';
+                recordsList.innerHTML = '<p class="empty-state">Nenhum registro encontrado.</p>';
             } else {
                 // Ordena os registros pela data (mais recentes primeiro)
-                registros.sort((a, b) => new Date(b.data) - new Date(a.data));
+                registros.sort((a, b) => getDateTimeValue(b) - getDateTimeValue(a));
                 
                 recordsList.innerHTML = registros.map(r => `
-                    <div class="record-item">
+                    <div class="record-item" role="listitem">
                         <div class="record-header">
                             <h4>Registro de ${formatarData(r.data)}</h4>
                             <div class="record-actions">
@@ -139,10 +138,10 @@
                         </div>
                         <div class="record-body">
                             <div class="record-field"><strong>Data:</strong> ${formatarData(r.data)}</div>
-                            ${r.hora ? `<div class="record-field"><strong>Hora:</strong> ${r.hora}</div>` : ''}
+                            ${getTimeValue(r) ? `<div class="record-field"><strong>Hora:</strong> ${getTimeValue(r)}</div>` : ''}
                             <div class="record-field"><strong>Dor:</strong> ${r.dor} / 10</div>
                             <div class="record-field"><strong>Fadiga:</strong> ${r.fadiga} / 10</div>
-                            ${r.notas ? `<div class="record-field"><strong>Anotações:</strong> ${r.notas}</div>` : ''}
+                            ${(r.anotacoes || r.notas) ? `<div class="record-field"><strong>Anotações:</strong> ${r.anotacoes || r.notas}</div>` : ''}
                         </div>
                     </div>
                 `).join('');
@@ -178,8 +177,8 @@
             
             if (registro) {
                 document.getElementById('editEntryId').value = id;
-                document.getElementById('editData').value = registro.data;
-                document.getElementById('editHora').value = registro.hora || '';
+                document.getElementById('editData').value = getDateValue(registro);
+                document.getElementById('editHora').value = getTimeValue(registro);
                 
                 const dorSlider = document.getElementById('editDor');
                 dorSlider.value = registro.dor;
@@ -189,9 +188,10 @@
                 fadigaSlider.value = registro.fadiga;
                 document.getElementById('editFadigaValue').textContent = registro.fadiga;
                 
-                document.getElementById('editNotas').value = registro.notas || '';
+                document.getElementById('editNotas').value = registro.anotacoes || registro.notas || '';
                 
                 document.getElementById('editModal').style.display = 'flex';
+                document.querySelector('.modal-content').focus();
             } else {
                 alert('Registro não encontrado!');
             }
@@ -202,6 +202,11 @@
             // Fechar modal
             document.querySelector('.close-modal').addEventListener('click', closeModal);
             document.getElementById('cancelEdit').addEventListener('click', closeModal);
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape') {
+                    closeModal();
+                }
+            });
             
             // Quando clica fora do modal, fecha
             window.addEventListener('click', function(event) {
@@ -220,14 +225,14 @@
                 const hora = document.getElementById('editHora').value;
                 const dor = parseInt(document.getElementById('editDor').value);
                 const fadiga = parseInt(document.getElementById('editFadiga').value);
-                const notas = document.getElementById('editNotas').value;
+                const anotacoes = document.getElementById('editNotas').value.trim();
                 
                 const updatedData = {
                     data,
                     hora,
                     dor,
                     fadiga,
-                    notas
+                    anotacoes
                 };
                 
                 const success = editEntry(id, updatedData);
@@ -277,6 +282,41 @@
         function closeModal() {
             document.getElementById('editModal').style.display = 'none';
         }
+
+        function getDateValue(registro) {
+            if (!registro?.data) {
+                return '';
+            }
+
+            if (registro.data.includes('T')) {
+                return registro.data.split('T')[0];
+            }
+
+            return registro.data;
+        }
+
+        function getTimeValue(registro) {
+            if (registro?.hora) {
+                return registro.hora;
+            }
+
+            if (registro?.data && registro.data.includes('T')) {
+                return registro.data.split('T')[1].slice(0, 5);
+            }
+
+            return '';
+        }
+
+        function getDateTimeValue(registro) {
+            const dateValue = getDateValue(registro);
+            const timeValue = getTimeValue(registro) || '00:00';
+
+            if (!dateValue) {
+                return new Date(0);
+            }
+
+            return new Date(`${dateValue}T${timeValue}`);
+        }
         
         // Exibe mensagem temporária
         function showMessage(text, type) {
@@ -300,8 +340,16 @@
         
         // Formata a data no formato brasileiro
         function formatarData(dataString) {
-            const data = new Date(dataString);
-            return data.toLocaleDateString('pt-BR');
+            const data = new Date(`${getDateValue({ data: dataString })}T00:00:00`);
+
+            if (Number.isNaN(data.getTime())) {
+                return dataString;
+            }
+
+            const formattedDate = data.toLocaleDateString('pt-BR');
+            const timeValue = getTimeValue({ data: dataString });
+
+            return timeValue ? `${formattedDate} às ${timeValue}` : formattedDate;
         }
     </script>
 </body>

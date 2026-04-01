@@ -161,6 +161,16 @@ p {
     color: var(--primary-color);
 }
 
+.main-nav a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+.close-modal:focus-visible {
+    outline: 3px solid rgba(138, 79, 255, 0.35);
+    outline-offset: 2px;
+}
+
 .main-nav a:hover::after,
 .main-nav li.active a::after {
     transform: scaleX(1);
@@ -572,6 +582,30 @@ button:hover {
     box-shadow: 0 0 0 3px rgba(138, 79, 255, 0.1);
 }
 
+.form-status {
+    min-height: 1.5rem;
+    font-weight: 500;
+    margin-top: -8px;
+    color: var(--text-light);
+}
+
+.form-status-success {
+    color: #1b7f4b;
+}
+
+.form-status-error {
+    color: #b42318;
+}
+
+.empty-state {
+    padding: 24px;
+    border-radius: var(--border-radius);
+    background: var(--background-color);
+    border: 1px dashed var(--border-color);
+    color: var(--text-light);
+    text-align: center;
+}
+
 /* Painel informativo */
 .info-panel {
     background-color: var(--primary-light);
@@ -643,6 +677,8 @@ button:hover {
 }
 
 .close-modal {
+    background: transparent;
+    border: 0;
     position: absolute;
     top: 15px;
     right: 15px;
