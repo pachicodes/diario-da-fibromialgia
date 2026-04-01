@@ -606,6 +606,93 @@ button:hover {
     text-align: center;
 }
 
+.summary-dashboard {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin: 32px 0 24px;
+}
+
+.summary-card {
+    background: var(--background-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 20px;
+    box-shadow: var(--shadow-sm);
+}
+
+.summary-label {
+    display: block;
+    color: var(--text-light);
+    font-size: 0.92rem;
+    margin-bottom: 10px;
+}
+
+.summary-value {
+    display: block;
+    color: var(--primary-dark);
+    font-size: 1.4rem;
+    line-height: 1.2;
+}
+
+.trend-section {
+    margin-bottom: 32px;
+}
+
+.trend-chart {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 16px;
+    background: var(--background-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 20px;
+    box-shadow: var(--shadow-sm);
+}
+
+.trend-bar-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.trend-bars {
+    width: 64px;
+    height: 160px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 8px;
+    border-radius: 20px;
+    background: linear-gradient(180deg, rgba(237, 228, 255, 0.8), rgba(248, 249, 250, 1));
+}
+
+.trend-bar {
+    width: 18px;
+    border-radius: 999px 999px 8px 8px;
+    min-height: 12px;
+}
+
+.trend-bar-pain {
+    height: var(--pain-height);
+    background: linear-gradient(180deg, #ff9aa8, #ff5a7a);
+}
+
+.trend-bar-fatigue {
+    height: var(--fatigue-height);
+    background: linear-gradient(180deg, #9db7ff, #4e72ff);
+}
+
+.trend-bar-label {
+    max-width: 110px;
+    text-align: center;
+    color: var(--text-light);
+    font-size: 0.82rem;
+    line-height: 1.35;
+}
+
 /* Painel informativo */
 .info-panel {
     background-color: var(--primary-light);

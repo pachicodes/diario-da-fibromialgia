@@ -35,6 +35,12 @@
             <section class="records-section">
                 <h2>Meus Registros</h2>
                 <p class="form-subtitle">Veja o histórico dos seus registros diários</p>
+                <div id="summaryDashboard" class="summary-dashboard" aria-label="Resumo dos registros"></div>
+                <section class="trend-section">
+                    <h3>Tendência recente</h3>
+                    <p class="form-subtitle">Comparativo dos últimos 10 registros.</p>
+                    <div id="trendChart" class="trend-chart" aria-label="Gráfico de tendência de dor e fadiga"></div>
+                </section>
                 <div id="recordsList" class="records-list" role="list" aria-live="polite" aria-label="Lista de registros">
                     <!-- Os registros serão exibidos aqui via JavaScript -->
                 </div>
@@ -119,15 +125,19 @@
         // Carrega e exibe registros
         function loadRegistros() {
             const recordsList = document.getElementById('recordsList');
+            const summaryDashboard = document.getElementById('summaryDashboard');
+            const trendChart = document.getElementById('trendChart');
             const registros = getEntries();
+            const registrosOrdenados = registros.slice().sort((a, b) => getDateTimeValue(b) - getDateTimeValue(a));
+
+            renderSummary(summaryDashboard, registrosOrdenados);
+            renderTrendChart(trendChart, registrosOrdenados);
             
-            if (registros.length === 0) {
+            if (registrosOrdenados.length === 0) {
                 recordsList.innerHTML = '<p class="empty-state">Nenhum registro encontrado.</p>';
             } else {
                 // Ordena os registros pela data (mais recentes primeiro)
-                registros.sort((a, b) => getDateTimeValue(b) - getDateTimeValue(a));
-                
-                recordsList.innerHTML = registros.map(r => `
+                recordsList.innerHTML = registrosOrdenados.map(r => `
                     <div class="record-item" role="listitem">
                         <div class="record-header">
                             <h4>Registro de ${formatarData(r.data)}</h4>
@@ -149,6 +159,82 @@
                 // Adiciona eventos aos botões
                 setupButtonListeners();
             }
+        }
+
+        function renderSummary(container, registros) {
+            if (!container) {
+                return;
+            }
+
+            if (registros.length === 0) {
+                container.innerHTML = '<p class="empty-state">Ainda não há dados para resumir.</p>';
+                return;
+            }
+
+            const total = registros.length;
+            const avgPain = average(registros.map(registro => Number(registro.dor)));
+            const avgFatigue = average(registros.map(registro => Number(registro.fadiga)));
+            const highestPain = Math.max(...registros.map(registro => Number(registro.dor)));
+            const highestFatigue = Math.max(...registros.map(registro => Number(registro.fadiga)));
+
+            container.innerHTML = `
+                <div class="summary-card">
+                    <span class="summary-label">Registros</span>
+                    <strong class="summary-value">${total}</strong>
+                </div>
+                <div class="summary-card">
+                    <span class="summary-label">Dor média</span>
+                    <strong class="summary-value">${avgPain.toFixed(1)}</strong>
+                </div>
+                <div class="summary-card">
+                    <span class="summary-label">Fadiga média</span>
+                    <strong class="summary-value">${avgFatigue.toFixed(1)}</strong>
+                </div>
+                <div class="summary-card">
+                    <span class="summary-label">Pico mais recente</span>
+                    <strong class="summary-value">Dor ${highestPain} | Fadiga ${highestFatigue}</strong>
+                </div>
+            `;
+        }
+
+        function renderTrendChart(container, registros) {
+            if (!container) {
+                return;
+            }
+
+            const latestEntries = registros.slice(0, 10).reverse();
+
+            if (latestEntries.length === 0) {
+                container.innerHTML = '<p class="empty-state">O gráfico aparece quando houver registros suficientes.</p>';
+                return;
+            }
+
+            container.innerHTML = latestEntries.map((registro, index) => {
+                const painHeight = `${Math.max(Number(registro.dor) || 0, 0) * 10}%`;
+                const fatigueHeight = `${Math.max(Number(registro.fadiga) || 0, 0) * 10}%`;
+                const label = formatarData(registro.data);
+
+                return `
+                    <div class="trend-bar-group" style="--pain-height: ${painHeight}; --fatigue-height: ${fatigueHeight};">
+                        <div class="trend-bars">
+                            <div class="trend-bar trend-bar-pain" aria-hidden="true"></div>
+                            <div class="trend-bar trend-bar-fatigue" aria-hidden="true"></div>
+                        </div>
+                        <span class="trend-bar-label">${label}</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function average(values) {
+            const validValues = values.filter(value => Number.isFinite(value));
+
+            if (validValues.length === 0) {
+                return 0;
+            }
+
+            const sum = validValues.reduce((accumulator, value) => accumulator + value, 0);
+            return sum / validValues.length;
         }
         
         // Configura os ouvintes para os botões de editar e excluir
